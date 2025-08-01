@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block title %} Student List {% endblock title %}
+{%block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h2>Student List</h2>
+  <a class="btn btn-primary" href="{% url 'create' %}">Create Student</a>
+</div>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>Student_Number</th>
+      <th>Student_FirstName</th>
+      <th>Student_LastName</th>
+      <th>Student_Email</th>
+      <th>Student_Course</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in students %}
+    <tr>
+      <td>{{student.student_num}}</td>
+      <td>{{student.student_firstname}}</td>
+      <td>{{student.student_lastname}}</td>
+      <td>{{student.student_email}}</td>
+      <td>{{student.student_course}}</td>
+      <td>
+        <a class="btn btn-success btn-sm" href="{% url 'update' student.pk %}"
+          >Edit</a
+        >
+        <form
+          method="POST"
+          action="{% url 'delete' student.pk %}"
+          style="display: inline"
+          onsubmit="return confirmDelete('{{ student.student_firstname }}');"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<script>
+  function confirmDelete(name) {
+    return confirm(`Are you sure you want to delete ${name}?`);
+  }
+</script>
+{% endblock content %}
